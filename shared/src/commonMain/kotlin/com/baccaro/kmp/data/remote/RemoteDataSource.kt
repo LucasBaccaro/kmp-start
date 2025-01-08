@@ -1,8 +1,8 @@
 package com.baccaro.kmp.data.remote
 
-import GenericDto
+import ItemDto
 
 class RemoteDataSource(private val apiService: ApiService) {
-    suspend fun getList(): List<GenericDto> = apiService.getList()
-    suspend fun getDetails(id:Int): GenericDto = apiService.getDetails(id)
+    suspend fun getList(): List<ItemDto> = apiService.getList()
+    suspend fun getDetails(id:Int): ItemDto = apiService.getDetails(id)
 }
