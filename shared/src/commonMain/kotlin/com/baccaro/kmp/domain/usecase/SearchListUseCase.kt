@@ -7,14 +7,11 @@ import com.baccaro.kmp.util.OperationResult
 class SearchListUseCase(
     private val localDatabase: LocalDatabase,
 ) {
-    suspend operator fun invoke(
-        text: String,
-        onlyFavorites: Boolean = false
-    ): OperationResult<List<ItemModel>> {
+    suspend operator fun invoke(text:String): OperationResult<List<ItemModel>> {
         return try {
-            val resultFromDb = localDatabase.searchItems(text, onlyFavorites)
+            val resultFromDb = localDatabase.searchItems(text)
             OperationResult.Success(resultFromDb)
-        } catch (e: Exception) {
+        } catch (e:Exception){
             OperationResult.Error(e.message ?: "Unknown error")
         }
     }

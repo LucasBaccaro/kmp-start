@@ -25,9 +25,6 @@ class HomeViewModel() : ViewModel(), KoinComponent {
     private val _searchText = MutableStateFlow("")
     val searchText: StateFlow<String> = _searchText
 
-    private val _isFavoriteSelected = MutableStateFlow(false)
-    val isFavoriteSelected: StateFlow<Boolean> = _isFavoriteSelected
-
     init {
         loadList()
     }
@@ -57,7 +54,7 @@ class HomeViewModel() : ViewModel(), KoinComponent {
         viewModelScope.launch {
             _listState.update { it.copy(isLoading = true) }
             try {
-                val result = searchListUseCase(text, _isFavoriteSelected.value)
+                val result = searchListUseCase(text)
                 _listState.update {
                     when (result) {
                         is OperationResult.Success -> {
@@ -77,11 +74,6 @@ class HomeViewModel() : ViewModel(), KoinComponent {
     fun onSearchTextChange(text: String) {
         _searchText.update { text }
         search(text)
-    }
-
-    fun onFavoriteChange(isSelected: Boolean) {
-        _isFavoriteSelected.update { isSelected }
-        search(_searchText.value)
     }
 
     fun toggleFavorite(item: ItemModel, isFavorite: Boolean) {
