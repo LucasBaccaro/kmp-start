@@ -33,11 +33,9 @@ class LocalDatabase(
             }
     }
 
-    fun searchItems(text: String, onlyFavorites: Boolean = false): List<ItemModel> {
+    fun searchItems(text: String): List<ItemModel> {
         return query.searchItems(text)
-            .executeAsList().filter { item ->
-                (!onlyFavorites || item.isFavorite == 1L )
-            }
+            .executeAsList()
             .map {
                 ItemModel(
                     _id = it.userId.toInt(),

@@ -53,7 +53,6 @@ fun ItemView(item: ItemModel, onItemTap: () -> Unit, toggleFavorite: () -> Unit)
     Row(modifier = Modifier.clickable(onClick = onItemTap)) {
         Column(modifier = Modifier.weight(1f)) {
             Text("${item.name}, ${item.country}")
-            Text(text = "Lon: ${item.coord.lon}, Lat: ${item.coord.lat}")
         }
         IconButton(onClick = toggleFavorite) {
             Icon(
