@@ -1,0 +1,15 @@
+CREATE TABLE ItemDataBaseTable (
+    userId INTEGER NOT NULL PRIMARY KEY,
+    country TEXT NOT NULL,
+    name TEXT NOT NULL,
+    lon REAL NOT NULL,
+    lat REAL NOT NULL
+);
+
+deleteAllItems: DELETE FROM ItemDataBaseTable;
+selectAllItems: SELECT * FROM ItemDataBaseTable;
+searchItems: SELECT * FROM ItemDataBaseTable WHERE name LIKE '%' || :query || '%' OR country LIKE '%' || :query || '%';
+selectItem: SELECT * FROM ItemDataBaseTable WHERE userId = :userId;
+
+insertItem: INSERT OR REPLACE INTO ItemDataBaseTable VALUES ?;
+

@@ -34,8 +34,6 @@ fun App() {
     }
 }
 
-
-@OptIn(KoinExperimentalAPI::class)
 @Composable
 fun Navigation() {
     val navController = rememberNavController()

@@ -2,6 +2,8 @@ package com.baccaro.kmp.di
 
 import CoordDto
 import ItemDto
+import com.baccaro.kmp.data.local.DataBaseDriverFactory
+import com.baccaro.kmp.data.local.LocalDatabase
 import com.baccaro.kmp.data.remote.ApiService
 import com.baccaro.kmp.data.remote.RemoteDataSource
 import com.baccaro.kmp.data.repository.RepositoryImpl
@@ -45,8 +47,9 @@ val commonModule = module {
             }
         }
     }
+    single<Repository> { RepositoryImpl(get(), get(), get()) }
     single { RemoteDataSource(get()) }
-    single<Repository> { RepositoryImpl(get(), get()) }
+    single { LocalDatabase(get()) }
     factory { GetListUseCase(get()) }
     factory { GetDetailsUseCase(get()) }
     factory { SearchListUseCase(get()) }
@@ -59,10 +62,11 @@ val commonModule = module {
             fun mapCoord(dto: CoordDto): CoordModel {
                 return CoordModel(dto.lon, dto.lat)
             }
-
         }
     }
     single<ApiService> { ApiService(get()) }
 }
 
-fun getCommonModules(): List<Module> = listOf(commonModule)
+expect val targetModule: Module
+
+fun getCommonModules(): List<Module> = listOf(commonModule, targetModule)

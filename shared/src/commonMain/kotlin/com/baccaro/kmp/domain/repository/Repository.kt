@@ -6,4 +6,5 @@ import com.baccaro.kmp.util.OperationResult
 interface Repository {
     suspend fun getList(): OperationResult<List<ItemModel>>
     suspend fun getDetails(id:Int): OperationResult<ItemModel>
+    suspend fun clearData()
 }

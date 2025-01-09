@@ -7,6 +7,7 @@ import com.baccaro.kmp.domain.model.ItemModel
 import com.baccaro.kmp.domain.usecase.GetListUseCase
 import com.baccaro.kmp.domain.usecase.SearchListUseCase
 import com.baccaro.kmp.util.OperationResult
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -24,14 +25,13 @@ class HomeViewModel() : ViewModel(), KoinComponent {
     private val _searchText = MutableStateFlow("")
     val searchText: StateFlow<String> = _searchText
 
-
     init {
         loadList()
     }
 
     fun loadList() {
         viewModelScope.launch {
-            _listState.update { it.copy(isLoading = true) }
+            _listState.update { it.copy(isLoading = true) } // Emitir estado de carga inicial
             try {
                 val result = getListUseCase()
                 _listState.update {
@@ -39,7 +39,6 @@ class HomeViewModel() : ViewModel(), KoinComponent {
                         is OperationResult.Success -> {
                             it.copy(isLoading = false, data = result.data, error = null)
                         }
-
                         is OperationResult.Error -> {
                             it.copy(isLoading = false, error = result.exception)
                         }
@@ -48,9 +47,9 @@ class HomeViewModel() : ViewModel(), KoinComponent {
             } catch (e: Exception) {
                 _listState.update { it.copy(isLoading = false, error = e.message ?: "Unknown error") }
             }
-
         }
     }
+
 
 
     fun search(text: String) {
@@ -63,7 +62,6 @@ class HomeViewModel() : ViewModel(), KoinComponent {
                         is OperationResult.Success -> {
                             it.copy(isLoading = false, data = result.data, error = null)
                         }
-
                         is OperationResult.Error -> {
                             it.copy(isLoading = false, error = result.exception)
                         }
@@ -74,14 +72,16 @@ class HomeViewModel() : ViewModel(), KoinComponent {
             }
         }
     }
+
+
     fun onSearchTextChange(text: String) {
         _searchText.update { text }
     }
 }
 
-
 data class HomeUiState(
-    val isLoading: Boolean = false,
+    val isLoading: Boolean = true,
     val data: List<ItemModel> = emptyList(),
-    val error: String? = null
+    val error: String? = null,
+    val loadingMessage: String = ""
 )
