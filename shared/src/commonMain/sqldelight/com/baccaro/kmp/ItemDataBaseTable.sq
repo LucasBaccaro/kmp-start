@@ -12,5 +12,7 @@ searchItems: SELECT * FROM ItemDataBaseTable WHERE name LIKE '%' || :query || '%
 
 insertItem: INSERT OR REPLACE INTO ItemDataBaseTable VALUES ?;
 
+selectItem: SELECT * FROM ItemDataBaseTable WHERE userId = :userId;
+
 updateFavorite: UPDATE ItemDataBaseTable SET isFavorite = :isFavorite WHERE userId = :userId;
 

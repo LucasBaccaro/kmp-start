@@ -3,7 +3,7 @@ package com.baccaro.kmp.data
 import android.content.Context
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.android.AndroidSqliteDriver
-import com.baccaro.kmp.ItemDataBase
+import com.baccaro.kmp.ItemDB
 import com.baccaro.kmp.data.local.DataBaseDriverFactory
 
 class AndroidDatabaseDriverFactory(
@@ -11,7 +11,7 @@ class AndroidDatabaseDriverFactory(
 ): DataBaseDriverFactory {
     override fun createDriver(): SqlDriver {
         return AndroidSqliteDriver(
-            ItemDataBase.Schema,
+            ItemDB.Schema,
             context,
             "item.db"
         )

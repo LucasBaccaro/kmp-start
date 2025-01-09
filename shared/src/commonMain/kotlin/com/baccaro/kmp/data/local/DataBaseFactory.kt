@@ -1,7 +1,7 @@
 package com.baccaro.kmp.data.local
 
 import app.cash.sqldelight.db.SqlDriver
-import com.baccaro.kmp.ItemDataBase
+import com.baccaro.kmp.ItemDB
 import com.baccaro.kmp.ItemDataBaseTable
 import com.baccaro.kmp.domain.model.CoordModel
 import com.baccaro.kmp.domain.model.ItemModel
@@ -13,7 +13,7 @@ interface DataBaseDriverFactory{
 class LocalDatabase(
     databaseDriverFactory: DataBaseDriverFactory
 ) {
-    private val database = ItemDataBase(
+    private val database = ItemDB(
         databaseDriverFactory.createDriver()
     )
     private val query = database.itemDataBaseTableQueries
@@ -69,22 +69,24 @@ class LocalDatabase(
             }
         }
     }
-    fun insertItem(item: ItemModel) {
-        try {
-            query.insertItem(
-                ItemDataBaseTable(
-                    userId = item._id.toLong(),
-                    name = item.name,
-                    country = item.country,
-                    lon = item.coord.lon,
-                    lat = item.coord.lat,
-                    isFavorite = if(item.isFavorite) 1 else 0
+
+    fun readItem(id: Int): ItemModel? {
+        return try {
+            query.selectItem(id.toLong()).executeAsOneOrNull()?.let {
+                ItemModel(
+                    _id = it.userId.toInt(),
+                    name = it.name,
+                    country = it.country,
+                    coord = CoordModel(it.lon, it.lat),
+                    isFavorite = it.isFavorite == 1L
                 )
-            )
+            }
         } catch(e: Exception) {
-            println("Error inserting single item to database ${e.message}")
-            // TODO: Log or Handle the error
+            // TODO Log or Handle the error
+            println("Error Reading from database ${e.message}")
+            null
         }
+
     }
 
     fun updateFavorite(id: Int, isFavorite: Boolean){

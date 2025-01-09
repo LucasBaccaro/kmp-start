@@ -1,4 +1,4 @@
-package com.baccaro.kmp.ui
+package com.baccaro.kmp.ui.home
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -19,9 +19,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.baccaro.kmp.domain.model.ItemModel
+import com.baccaro.kmp.presentation.HomeViewModel
 
 @Composable
-fun HomeScreen(homeViewModel: HomeViewModel) {
+fun HomeScreen(homeViewModel: HomeViewModel, onItemTap: (String, String) -> Unit) {
     val state = homeViewModel.listState.collectAsStateWithLifecycle()
     val searchText = homeViewModel.searchText.collectAsStateWithLifecycle()
 
@@ -40,7 +41,7 @@ fun HomeScreen(homeViewModel: HomeViewModel) {
                 items(sortedList) { item ->
                     ItemView(
                         item,
-                        onItemTap = { },
+                        onItemTap = { onItemTap(item.coord.lon.toString(), item.coord.lat.toString()) },
                         toggleFavorite = { homeViewModel.toggleFavorite(item, !item.isFavorite) })
                 }
             }

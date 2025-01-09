@@ -32,12 +32,13 @@ kotlin {
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.contentnegotiation)
             implementation(libs.ktor.serialization.json)
-            implementation(project.dependencies.platform(libs.koin.bom))
-            implementation(libs.koin.core)
-            implementation(libs.koin.compose.viewmodel)
-
             implementation(libs.multiplatform.settings)
             implementation(libs.multiplatform.settings.no.arg)
+
+            implementation(project.dependencies.platform(libs.koin.bom))
+            implementation(libs.koin.core)
+            implementation(libs.koin.compose)
+            implementation(libs.koin.compose.viewmodel)
         }
 
         iosMain.dependencies {
@@ -46,6 +47,7 @@ kotlin {
         }
     }
 }
+
 
 android {
     namespace = "com.baccaro.kmp.shared"
@@ -61,7 +63,7 @@ android {
 
 sqldelight {
     databases {
-        create("ItemDataBase") {
+        create("ItemDB") {
             packageName.set("com.baccaro.kmp")
         }
     }

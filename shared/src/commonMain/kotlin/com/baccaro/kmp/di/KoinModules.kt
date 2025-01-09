@@ -2,7 +2,6 @@ package com.baccaro.kmp.di
 
 import CoordDto
 import ItemDto
-import com.baccaro.kmp.data.local.DataBaseDriverFactory
 import com.baccaro.kmp.data.local.LocalDatabase
 import com.baccaro.kmp.data.remote.ApiService
 import com.baccaro.kmp.data.remote.RemoteDataSource
@@ -14,6 +13,7 @@ import com.baccaro.kmp.domain.usecase.GetDetailsUseCase
 import com.baccaro.kmp.domain.usecase.GetListUseCase
 import com.baccaro.kmp.domain.usecase.SearchListUseCase
 import com.baccaro.kmp.domain.usecase.UpdateFavoriteUseCase
+import com.baccaro.kmp.presentation.HomeViewModel
 import com.baccaro.kmp.util.Mapper
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -23,7 +23,10 @@ import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
+import org.koin.core.KoinApplication
+import org.koin.core.context.startKoin
 import org.koin.core.module.Module
+import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
 val commonModule = module {
@@ -67,8 +70,14 @@ val commonModule = module {
         }
     }
     single<ApiService> { ApiService(get()) }
+    viewModelOf(::HomeViewModel)
 }
 
 expect val targetModule: Module
 
-fun getCommonModules(): List<Module> = listOf(commonModule, targetModule)
+fun initializeKoin(config: (KoinApplication.() -> Unit)? = null) {
+    startKoin {
+        config?.invoke(this)
+        modules(targetModule, commonModule)
+    }
+}

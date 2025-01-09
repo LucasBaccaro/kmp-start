@@ -1,4 +1,4 @@
-package com.baccaro.kmp.ui
+package com.baccaro.kmp.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
