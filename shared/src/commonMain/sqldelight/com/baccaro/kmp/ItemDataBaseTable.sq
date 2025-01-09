@@ -3,13 +3,14 @@ CREATE TABLE ItemDataBaseTable (
     country TEXT NOT NULL,
     name TEXT NOT NULL,
     lon REAL NOT NULL,
-    lat REAL NOT NULL
+    lat REAL NOT NULL,
+    isFavorite INTEGER NOT NULL DEFAULT 0
 );
 
-deleteAllItems: DELETE FROM ItemDataBaseTable;
 selectAllItems: SELECT * FROM ItemDataBaseTable;
 searchItems: SELECT * FROM ItemDataBaseTable WHERE name LIKE '%' || :query || '%' OR country LIKE '%' || :query || '%';
-selectItem: SELECT * FROM ItemDataBaseTable WHERE userId = :userId;
 
 insertItem: INSERT OR REPLACE INTO ItemDataBaseTable VALUES ?;
+
+updateFavorite: UPDATE ItemDataBaseTable SET isFavorite = :isFavorite WHERE userId = :userId;
 

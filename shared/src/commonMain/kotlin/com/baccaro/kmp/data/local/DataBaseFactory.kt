@@ -27,27 +27,26 @@ class LocalDatabase(
                     _id = it.userId.toInt(),
                     name = it.name,
                     country = it.country,
-                    coord = CoordModel(it.lon, it.lat)
+                    coord = CoordModel(it.lon, it.lat),
+                    isFavorite = it.isFavorite == 1L
                 )
             }
     }
 
-    fun readItem(id: Int): ItemModel? {
-        return try {
-            query.selectItem(id.toLong()).executeAsOneOrNull()?.let {
+    fun searchItems(text: String, onlyFavorites: Boolean = false): List<ItemModel> {
+        return query.searchItems(text)
+            .executeAsList().filter { item ->
+                (!onlyFavorites || item.isFavorite == 1L )
+            }
+            .map {
                 ItemModel(
                     _id = it.userId.toInt(),
                     name = it.name,
                     country = it.country,
-                    coord = CoordModel(it.lon, it.lat)
+                    coord = CoordModel(it.lon, it.lat),
+                    isFavorite = it.isFavorite == 1L
                 )
             }
-        } catch(e: Exception) {
-            // TODO Log or Handle the error
-            println("Error Reading from database ${e.message}")
-            null
-        }
-
     }
 
     fun insertAllItems(items: List<ItemModel>) {
@@ -61,7 +60,8 @@ class LocalDatabase(
                             name = item.name,
                             country = item.country,
                             lon = item.coord.lon,
-                            lat = item.coord.lat
+                            lat = item.coord.lat,
+                            isFavorite = if(item.isFavorite) 1 else 0
                         )
                     )
                 }
@@ -79,23 +79,19 @@ class LocalDatabase(
                     name = item.name,
                     country = item.country,
                     lon = item.coord.lon,
-                    lat = item.coord.lat
+                    lat = item.coord.lat,
+                    isFavorite = if(item.isFavorite) 1 else 0
                 )
             )
         } catch(e: Exception) {
             println("Error inserting single item to database ${e.message}")
             // TODO: Log or Handle the error
         }
-
-
     }
-    fun clearAllData() {
-        try {
-            query.deleteAllItems()
-        } catch(e: Exception) {
-            println("Error deleting items from database ${e.message}")
-            // TODO: Log or Handle the error
-        }
 
+    fun updateFavorite(id: Int, isFavorite: Boolean){
+        query.transaction {
+            query.updateFavorite(if(isFavorite) 1 else 0, id.toLong())
+        }
     }
 }

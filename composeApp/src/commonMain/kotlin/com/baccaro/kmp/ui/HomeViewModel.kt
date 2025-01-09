@@ -1,13 +1,12 @@
 package com.baccaro.kmp.ui
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.baccaro.kmp.domain.model.ItemModel
 import com.baccaro.kmp.domain.usecase.GetListUseCase
 import com.baccaro.kmp.domain.usecase.SearchListUseCase
+import com.baccaro.kmp.domain.usecase.UpdateFavoriteUseCase
 import com.baccaro.kmp.util.OperationResult
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -18,6 +17,7 @@ import org.koin.core.component.inject
 class HomeViewModel() : ViewModel(), KoinComponent {
     private val getListUseCase: GetListUseCase by inject()
     private val searchListUseCase: SearchListUseCase by inject()
+    private val updateFavoriteUseCase: UpdateFavoriteUseCase by inject()
 
     private val _listState = MutableStateFlow(HomeUiState())
     val listState: StateFlow<HomeUiState> = _listState
@@ -25,13 +25,16 @@ class HomeViewModel() : ViewModel(), KoinComponent {
     private val _searchText = MutableStateFlow("")
     val searchText: StateFlow<String> = _searchText
 
+    private val _isFavoriteSelected = MutableStateFlow(false)
+    val isFavoriteSelected: StateFlow<Boolean> = _isFavoriteSelected
+
     init {
         loadList()
     }
 
     fun loadList() {
         viewModelScope.launch {
-            _listState.update { it.copy(isLoading = true) } // Emitir estado de carga inicial
+            _listState.update { it.copy(isLoading = true) }
             try {
                 val result = getListUseCase()
                 _listState.update {
@@ -50,13 +53,11 @@ class HomeViewModel() : ViewModel(), KoinComponent {
         }
     }
 
-
-
     fun search(text: String) {
         viewModelScope.launch {
             _listState.update { it.copy(isLoading = true) }
             try {
-                val result = searchListUseCase(text)
+                val result = searchListUseCase(text, _isFavoriteSelected.value)
                 _listState.update {
                     when (result) {
                         is OperationResult.Success -> {
@@ -73,9 +74,30 @@ class HomeViewModel() : ViewModel(), KoinComponent {
         }
     }
 
-
     fun onSearchTextChange(text: String) {
         _searchText.update { text }
+        search(text)
+    }
+
+    fun onFavoriteChange(isSelected: Boolean) {
+        _isFavoriteSelected.update { isSelected }
+        search(_searchText.value)
+    }
+
+    fun toggleFavorite(item: ItemModel, isFavorite: Boolean) {
+        viewModelScope.launch {
+            updateFavoriteUseCase(item._id, isFavorite)
+            updateItem(item.copy(isFavorite = isFavorite))
+        }
+    }
+
+    private fun updateItem(item: ItemModel){
+        val currentList = _listState.value.data.toMutableList()
+        val index = currentList.indexOfFirst { it._id == item._id }
+        if (index != -1) {
+            currentList[index] = item
+            _listState.update { it.copy(data = currentList) }
+        }
     }
 }
 

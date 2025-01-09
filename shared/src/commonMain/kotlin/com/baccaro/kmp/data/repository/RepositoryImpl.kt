@@ -24,7 +24,6 @@ class RepositoryImpl(
                 return OperationResult.Success(cachedItems)
             }
 
-            // Si la bd esta vacia, carga de la API
             loadInitialData()
             return  OperationResult.Success(localDatabase.readAllPosts())
 
@@ -49,25 +48,10 @@ class RepositoryImpl(
     }
 
     override suspend fun getDetails(id: Int): OperationResult<ItemModel> {
-        // Primero intentar obtener de la base de datos
-        val cachedItem = localDatabase.readItem(id)
-        if (cachedItem != null) {
-            return OperationResult.Success(cachedItem)
-        }
-
-        // Si no está en la base de datos, obtener de la API y guardar
-        return try {
-            val result = remoteDataSource.getDetails(id)
-            val mappedItem = mapper.map(result)
-            localDatabase.insertItem(mappedItem)
-            OperationResult.Success(mappedItem)
-        } catch (e: Exception) {
-            OperationResult.Error(e.message ?: "Unknown error")
-        }
+        return OperationResult.Error("Erorrr al obtener detail")
     }
 
     override suspend fun clearData() {
-        localDatabase.clearAllData()
-        isInitialLoadComplete = false
+        TODO("Not yet implemented")
     }
 }

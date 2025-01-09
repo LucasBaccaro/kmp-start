@@ -13,6 +13,7 @@ import com.baccaro.kmp.domain.repository.Repository
 import com.baccaro.kmp.domain.usecase.GetDetailsUseCase
 import com.baccaro.kmp.domain.usecase.GetListUseCase
 import com.baccaro.kmp.domain.usecase.SearchListUseCase
+import com.baccaro.kmp.domain.usecase.UpdateFavoriteUseCase
 import com.baccaro.kmp.util.Mapper
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -53,6 +54,7 @@ val commonModule = module {
     factory { GetListUseCase(get()) }
     factory { GetDetailsUseCase(get()) }
     factory { SearchListUseCase(get()) }
+    factory { UpdateFavoriteUseCase(get()) }
     single<Mapper<ItemDto, ItemModel>> {
         object : Mapper<ItemDto, ItemModel> {
             override fun map(dto: ItemDto): ItemModel {
