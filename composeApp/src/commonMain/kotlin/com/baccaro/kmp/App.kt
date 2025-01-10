@@ -19,7 +19,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Preview
 fun App() {
     MaterialTheme {
-        MapComponent()
+        Navigation()
     }
 }
 
