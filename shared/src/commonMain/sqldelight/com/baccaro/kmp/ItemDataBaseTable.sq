@@ -8,7 +8,8 @@ CREATE TABLE ItemDataBaseTable (
 );
 
 selectAllItems: SELECT * FROM ItemDataBaseTable;
-searchItems: SELECT * FROM ItemDataBaseTable WHERE name LIKE '%' || :query || '%' OR country LIKE '%' || :query || '%';
+
+searchItems: SELECT * FROM ItemDataBaseTable WHERE name LIKE :query || '%' OR country LIKE :query || '%';
 
 insertItem: INSERT OR REPLACE INTO ItemDataBaseTable VALUES ?;
 
