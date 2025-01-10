@@ -14,14 +14,14 @@ import platform.CoreLocation.CLLocationCoordinate2DMake
 
 @OptIn(ExperimentalForeignApi::class)
 @Composable
-actual fun GoogleMaps(lat: Double, lon: Double) {
+actual fun GoogleMaps(lat: Double, lon: Double,modifier: Modifier) {
     val mapView = remember { GMSMapView() }
 
     // 1. Configurar la cámara
     val cameraPosition = GMSCameraPosition.cameraWithLatitude(
         latitude = lat,
         longitude = lon,
-        zoom = 20.0f
+        zoom = 10.0f
     )
     val cameraUpdate = GMSCameraUpdate.setCamera(cameraPosition)
     mapView.moveCamera(cameraUpdate)
@@ -34,7 +34,7 @@ actual fun GoogleMaps(lat: Double, lon: Double) {
 
 
     UIKitView(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier,
         factory = { mapView }
     )
 }

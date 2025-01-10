@@ -39,7 +39,9 @@ fun Navigation() {
         }
         composable<Detail> { backStackEntry ->
             val args = backStackEntry.toRoute<Detail>()
-            DetailScreen(args.lon, args.lat)
+            DetailScreen(args.lon, args.lat) {
+                navController.popBackStack()
+            }
         }
     }
 }
