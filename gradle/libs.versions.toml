@@ -26,6 +26,8 @@ sqldelight = "2.0.2"
 settings = "1.2.0"
 dateTime = "0.6.1"
 
+androidx-google-maps = "6.1.0"
+
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -56,6 +58,7 @@ koin-core = { group = "io.insert-koin", name = "koin-core" }
 koin-compose = { group = "io.insert-koin", name = "koin-compose" }
 koin-compose-viewmodel = { group = "io.insert-koin", name = "koin-compose-viewmodel", version.ref = "koinCompose"}
 androidx-navigation-compose = { group = "org.jetbrains.androidx.navigation", name = "navigation-compose", version.ref = "navigation-compose" }
+androidx-google-maps = { module = "com.google.maps.android:maps-compose", version.ref = "androidx-google-maps" }
 
 #sqlight
 sqldelight-android = { module = "app.cash.sqldelight:android-driver", version.ref = "sqldelight" }

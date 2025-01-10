@@ -39,6 +39,7 @@ kotlin {
             implementation(compose.materialIconsExtended)
             implementation(libs.koin.android)
             implementation(compose.ui)
+            implementation(libs.androidx.google.maps)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
