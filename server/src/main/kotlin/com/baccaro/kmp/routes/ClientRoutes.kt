@@ -24,26 +24,27 @@ fun Application.clientRoutes(clientService: ClientService) {
                 }
             }
 
-            get("{id?}") {
-                val clientId = call.parameters["id"]?.toIntOrNull()
-                if (clientId == null) {
-                    try {
-                        val allClients = clientService.getAllClients()
-                        call.respond(allClients)
-                    } catch (e: Exception) {
-                        call.respond(HttpStatusCode.BadRequest, mapOf("error" to (e.message ?: "Error al obtener todos los clientes")))
+
+            get { // Ruta para obtener TODOS los workers
+                try {
+                    val allClients = clientService.getAllClients()
+                    call.respond(allClients)
+                } catch (e: Exception) {
+                    call.respond(HttpStatusCode.BadRequest, mapOf("error" to (e.message ?: "Error al obtener todos los clientes")))
+                }
+            }
+
+            get("{id}") { // Ruta para obtener un cliente por ID
+                val clientId = call.parameters["id"]?.toIntOrNull() ?: return@get call.respond(HttpStatusCode.BadRequest)
+                try {
+                    val client = clientService.findClientById(clientId)
+                    if (client == null) {
+                        call.respond(HttpStatusCode.NotFound)
+                    } else {
+                        call.respond(client)
                     }
-                } else {
-                    try {
-                        val client = clientService.findClientById(clientId)
-                        if (client == null) {
-                            call.respond(HttpStatusCode.NotFound)
-                        } else {
-                            call.respond(client)
-                        }
-                    } catch (e: Exception) {
-                        call.respond(HttpStatusCode.BadRequest, mapOf("error" to (e.message ?: "Error al obtener el cliente")))
-                    }
+                } catch (e: Exception) {
+                    call.respond(HttpStatusCode.BadRequest, mapOf("error" to (e.message ?: "Error al obtener el clientes")))
                 }
             }
         }

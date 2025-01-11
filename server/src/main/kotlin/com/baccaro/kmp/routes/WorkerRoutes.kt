@@ -24,26 +24,26 @@ fun Application.workerRoutes(workerService: WorkerService) {
                 }
             }
 
-            get("{id?}") {
-                val workerId = call.parameters["id"]?.toIntOrNull()
-                if (workerId == null) {
-                    try {
-                        val allWorkers = workerService.getAllWorkers()
-                        call.respond(allWorkers)
-                    } catch (e: Exception) {
-                        call.respond(HttpStatusCode.BadRequest, mapOf("error" to (e.message ?: "Error al obtener todos los workers")))
+            get { // Ruta para obtener TODOS los workers
+                try {
+                    val allWorkers = workerService.getAllWorkers()
+                    call.respond(allWorkers)
+                } catch (e: Exception) {
+                    call.respond(HttpStatusCode.BadRequest, mapOf("error" to (e.message ?: "Error al obtener todos los workers")))
+                }
+            }
+
+            get("{id}") { // Ruta para obtener un worker por ID
+                val workerId = call.parameters["id"]?.toIntOrNull() ?: return@get call.respond(HttpStatusCode.BadRequest)
+                try {
+                    val worker = workerService.findWorkerById(workerId)
+                    if (worker == null) {
+                        call.respond(HttpStatusCode.NotFound)
+                    } else {
+                        call.respond(worker)
                     }
-                } else {
-                    try {
-                        val worker = workerService.findWorkerById(workerId)
-                        if (worker == null) {
-                            call.respond(HttpStatusCode.NotFound)
-                        } else {
-                            call.respond(worker)
-                        }
-                    } catch (e: Exception) {
-                        call.respond(HttpStatusCode.BadRequest, mapOf("error" to (e.message ?: "Error al obtener el worker")))
-                    }
+                } catch (e: Exception) {
+                    call.respond(HttpStatusCode.BadRequest, mapOf("error" to (e.message ?: "Error al obtener el worker")))
                 }
             }
         }
