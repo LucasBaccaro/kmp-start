@@ -7,9 +7,11 @@ import com.baccaro.kmp.plugins.db.DatabaseFactory
 import com.baccaro.kmp.services.ClientService
 import com.baccaro.kmp.services.EmailService
 import com.baccaro.kmp.services.WorkerService
+import com.typesafe.config.ConfigFactory
 import com.zaxxer.hikari.HikariConfig
 import configureSerialization
 import io.ktor.server.application.Application
+import io.ktor.server.config.HoconApplicationConfig
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 
@@ -24,22 +26,23 @@ fun Application.module() {
     configureSerialization()
     // Configuración de la base de datos (como antes)
     val config = HikariConfig().apply {
-        jdbcUrl = "jdbc:postgresql://localhost:5432/konectAR"
-        username = "postgres"
-        password = "lbaccaro1"
+        jdbcUrl = System.getenv("JDBC_URL")
+        username = System.getenv("USERNAME")
+        password = System.getenv("PASSWORD")
         driverClassName = "org.postgresql.Driver"
         maximumPoolSize = 3 // Número máximo de conexiones en el pool
+        maximumPoolSize = 3
         isAutoCommit = false // Desactiva el autocommit para usar transacciones
         transactionIsolation =
             "TRANSACTION_REPEATABLE_READ" // Nivel de aislamiento de transacciones
         validate() // Valida la configuración }
     }
     val emailConfig = EmailService.EmailConfig(
-        host = "smtp.gmail.com", // O tu servidor SMTP, ej. "smtp.sendgrid.net"
-        port = 587, // O el puerto de tu servidor SMTP
-        username = "baccaro.develop@gmail.com", // Tu nombre de usuario de email
-        password = "utnu yjrk srdp fvkp", // Tu contraseña de email
-        from = "baccaro.develop@gmail.com"
+        host = System.getenv("HOST"),
+        port = System.getenv("PORT").toInt(),
+        username = System.getenv("USERNAME_EMAIL"),
+        password = System.getenv("PASSWORD_EMAIL"),
+        from = System.getenv("FROM"),
     )
     DatabaseFactory.init(config)
     // Inyección de dependencias (como antes)
