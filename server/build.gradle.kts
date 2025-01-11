@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.kotlinJvm)
     alias(libs.plugins.ktor)
+    alias(libs.plugins.kotlinxSerialization)
     application
 }
 
@@ -18,4 +19,13 @@ dependencies {
     implementation(libs.ktor.server.netty)
     testImplementation(libs.ktor.server.tests)
     testImplementation(libs.kotlin.test.junit)
+
+    implementation("io.ktor:ktor-serialization-kotlinx-json-jvm:$ktor")
+    implementation("io.ktor:ktor-server-content-negotiation-jvm:$ktor")
+    implementation("org.jetbrains.exposed:exposed-core:0.57.0")
+    implementation("org.jetbrains.exposed:exposed-dao:0.57.0")
+    implementation("org.jetbrains.exposed:exposed-jdbc:0.57.0")
+    implementation("org.jetbrains.exposed:exposed-kotlin-datetime:0.57.0")
+    implementation("com.zaxxer:HikariCP:5.0.1") // HikariCP para la gestión de conexiones
+    implementation("org.postgresql:postgresql:42.6.0") // Driver de PostgreSQL
 }
