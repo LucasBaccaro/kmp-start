@@ -1,7 +1,12 @@
+import kotlinx.coroutines.runBlocking
+import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.sql.update
 
 class WorkerRepository {
 
@@ -79,4 +84,28 @@ class WorkerRepository {
         actualizadoEn = row[Users.actualizadoEn],
         estado = row[Users.estado]
     )
+
+    suspend fun updateWorker(worker: Worker): Worker = dbQuery {
+        // 1. Actualizar la tabla Workers (si es necesario)
+        Workers.update({ Workers.id eq worker.id }) {
+            it[profesion] = worker.profesion
+            it[fotoPerfil] = worker.fotoPerfil
+            it[dni] = worker.dni
+            it[zonaCobertura] = worker.zonaCobertura
+            it[descripcionServicios] = worker.descripcionServicios
+            it[ratingPromedio] = worker.ratingPromedio
+            it[disponible] = worker.disponible
+        }
+
+        // 2. Actualizar la tabla Users
+        Users.update({ Users.id eq worker.usuario.id }) {
+            it[estado] = worker.usuario.estado
+            it[actualizadoEn] = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()) // Actualiza la fecha de actualización
+        }
+
+        // 3. Devolver el worker actualizado.  Lo más eficiente es reconstruirlo:
+        runBlocking {
+            findWorkerById(worker.id!!) ?: throw IllegalStateException("Worker no encontrado después de la actualización")
+        }
+    }
 }

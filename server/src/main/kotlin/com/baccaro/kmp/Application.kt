@@ -5,6 +5,7 @@ import WorkerRepository
 import com.baccaro.kmp.plugins.configureRouting
 import com.baccaro.kmp.plugins.db.DatabaseFactory
 import com.baccaro.kmp.services.ClientService
+import com.baccaro.kmp.services.EmailService
 import com.baccaro.kmp.services.WorkerService
 import com.zaxxer.hikari.HikariConfig
 import configureSerialization
@@ -33,9 +34,17 @@ fun Application.module() {
             "TRANSACTION_REPEATABLE_READ" // Nivel de aislamiento de transacciones
         validate() // Valida la configuración }
     }
+    val emailConfig = EmailService.EmailConfig(
+        host = "smtp.gmail.com", // O tu servidor SMTP, ej. "smtp.sendgrid.net"
+        port = 587, // O el puerto de tu servidor SMTP
+        username = "baccaro.develop@gmail.com", // Tu nombre de usuario de email
+        password = "utnu yjrk srdp fvkp", // Tu contraseña de email
+        from = "baccaro.develop@gmail.com"
+    )
     DatabaseFactory.init(config)
     // Inyección de dependencias (como antes)
     val clientService = ClientService(ClientRepository())
-    val workerService = WorkerService(WorkerRepository())
+    val emailService = EmailService(emailConfig)
+    val workerService = WorkerService(WorkerRepository(), emailService)
     configureRouting(clientService, workerService)
 }

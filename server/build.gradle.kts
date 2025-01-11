@@ -28,4 +28,6 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-kotlin-datetime:0.57.0")
     implementation("com.zaxxer:HikariCP:5.0.1") // HikariCP para la gestión de conexiones
     implementation("org.postgresql:postgresql:42.6.0") // Driver de PostgreSQL
+    implementation("org.simplejavamail:simple-java-mail:7.7.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:0.8.1")
 }

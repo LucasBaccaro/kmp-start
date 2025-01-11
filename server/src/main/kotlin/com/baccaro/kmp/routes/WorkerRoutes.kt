@@ -5,6 +5,7 @@ import io.ktor.server.request.receive
 import io.ktor.server.response.respond
 import io.ktor.server.routing.get
 import io.ktor.server.routing.post
+import io.ktor.server.routing.put
 import io.ktor.server.routing.route
 import io.ktor.server.routing.routing
 import kotlinx.serialization.SerializationException
@@ -44,6 +45,15 @@ fun Application.workerRoutes(workerService: WorkerService) {
                     }
                 } catch (e: Exception) {
                     call.respond(HttpStatusCode.BadRequest, mapOf("error" to (e.message ?: "Error al obtener el worker")))
+                }
+            }
+            put("{id}/validate") { // Nueva ruta para validación
+                val workerId = call.parameters["id"]?.toIntOrNull() ?: return@put call.respond(HttpStatusCode.BadRequest)
+                val updatedWorker = workerService.validateWorker(workerId)
+                if (updatedWorker != null) {
+                    call.respond(HttpStatusCode.OK, updatedWorker)
+                } else {
+                    call.respond(HttpStatusCode.NotFound)
                 }
             }
         }
