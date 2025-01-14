@@ -19,7 +19,8 @@ import androidx.compose.material.TabRow
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
@@ -27,11 +28,11 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.baccaro.kmp.domain.model.Coordinates
 import com.baccaro.kmp.domain.model.PostModel
+import com.baccaro.kmp.domain.model.Tab
 import com.baccaro.kmp.domain.model.UserModel
 import com.baccaro.kmp.presentation.HomeViewModel
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.annotation.KoinExperimentalAPI
 
 @Composable
 @Preview
@@ -41,7 +42,6 @@ fun App() {
     }
 }
 
-@OptIn(KoinExperimentalAPI::class)
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel = koinViewModel(),
@@ -60,7 +60,7 @@ fun HomeScreen(
         TabRow(
             selectedTabIndex = state.selectedTab.ordinal
         ) {
-            com.baccaro.kmp.presentation.Tab.entries.forEach { tab ->
+            Tab.entries.forEach { tab ->
                 Tab(
                     selected = state.selectedTab == tab,
                     onClick = { viewModel.onTabSelected(tab) },
@@ -83,12 +83,12 @@ fun HomeScreen(
         }
 
         when (state.selectedTab) {
-            com.baccaro.kmp.presentation.Tab.NEWS -> NewsList(
+            Tab.NEWS -> NewsList(
                 news = state.news,
                 onNewsClick = onNewsClick
             )
 
-            com.baccaro.kmp.presentation.Tab.USERS -> UsersList(
+            Tab.USERS -> UsersList(
                 users = state.users,
                 onUserLocationClick = onUserLocationClick
             )

@@ -1,7 +1,7 @@
 package com.baccaro.kmp.util
 
 import PostDto
-import UserDto
+import com.baccaro.kmp.data.dto.UserDto
 import com.baccaro.kmp.domain.model.Coordinates
 import com.baccaro.kmp.domain.model.PostModel
 import com.baccaro.kmp.domain.model.UserModel

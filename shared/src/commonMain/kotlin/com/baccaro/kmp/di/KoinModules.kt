@@ -2,11 +2,11 @@ package com.baccaro.kmp.di
 
 import com.baccaro.kmp.data.remote.ApiService
 import com.baccaro.kmp.data.remote.NewsRemoteDataSource
-import com.baccaro.kmp.data.remote.NewsRepository
 import com.baccaro.kmp.data.remote.NewsRepositoryImpl
 import com.baccaro.kmp.data.remote.UserRemoteDataSource
-import com.baccaro.kmp.data.remote.UserRepository
 import com.baccaro.kmp.data.remote.UserRepositoryImpl
+import com.baccaro.kmp.domain.repository.NewsRepository
+import com.baccaro.kmp.domain.repository.UserRepository
 import com.baccaro.kmp.domain.usecase.GetNewsDetailsUseCase
 import com.baccaro.kmp.domain.usecase.GetNewsUseCase
 import com.baccaro.kmp.domain.usecase.GetUserDetailsUseCase

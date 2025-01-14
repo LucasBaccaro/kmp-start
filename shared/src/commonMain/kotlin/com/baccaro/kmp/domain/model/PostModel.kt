@@ -8,15 +8,6 @@ data class PostModel(
     val category: String
 )
 
-data class UserModel(
-    val id: Int,
-    val fullName: String,
-    val email: String,
-    val city: String,
-    val location: Coordinates
-)
-
-data class Coordinates(
-    val latitude: Double,
-    val longitude: Double
-)
+enum class Tab {
+    NEWS, USERS
+}
