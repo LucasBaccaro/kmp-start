@@ -35,6 +35,9 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
+expect fun GoogleMaps(lat:Double,lon:Double,modifier: Modifier = Modifier)
+
+@Composable
 @Preview
 fun App() {
     MaterialTheme {

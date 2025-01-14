@@ -58,7 +58,7 @@ fun UserLocationScreen(
                     modifier = Modifier.padding(16.dp)
                 )
                 state.user != null -> {
-                    Text(state.user.toString())
+                    GoogleMaps(state.user!!.location.latitude, state.user!!.location.longitude)
                 }
             }
         }
