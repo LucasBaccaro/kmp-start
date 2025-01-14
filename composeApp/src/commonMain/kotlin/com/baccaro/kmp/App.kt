@@ -1,7 +1,5 @@
 package com.baccaro.kmp
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -11,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Button
 import androidx.compose.material.Card
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
@@ -27,27 +24,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewModelScope
 import com.baccaro.kmp.domain.model.Coordinates
 import com.baccaro.kmp.domain.model.PostModel
 import com.baccaro.kmp.domain.model.UserModel
-import com.baccaro.kmp.domain.usecase.GetNewsUseCase
-import com.baccaro.kmp.domain.usecase.GetUsersUseCase
-import com.baccaro.kmp.domain.usecase.SearchNewsUseCase
 import com.baccaro.kmp.presentation.HomeViewModel
-import com.baccaro.kmp.util.OperationResult
-import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
-
-import generickmp.composeapp.generated.resources.Res
-import generickmp.composeapp.generated.resources.compose_multiplatform
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
 

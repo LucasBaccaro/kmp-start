@@ -24,9 +24,7 @@ class AndroidApp : Application() {
     override fun onCreate() {
         super.onCreate()
         initializeKoin(
-            config = {
-                this@AndroidApp
-            }
+            config = { androidContext(this@AndroidApp) }
         )
     }
 }
