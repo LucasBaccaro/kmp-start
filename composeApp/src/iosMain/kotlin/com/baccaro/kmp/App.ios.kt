@@ -1,5 +1,6 @@
 package com.baccaro.kmp
 
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -33,7 +34,7 @@ actual fun GoogleMaps(lat: Double, lon: Double,modifier: Modifier) {
 
 
     UIKitView(
-        modifier = modifier,
+        modifier = modifier.fillMaxSize(),
         factory = { mapView }
     )
 }
