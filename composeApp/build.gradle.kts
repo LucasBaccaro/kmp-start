@@ -10,6 +10,7 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlinxSerialization)
+    alias(libs.plugins.cocoapods)
 }
 
 kotlin {
@@ -30,7 +31,7 @@ kotlin {
             isStatic = true
         }
     }
-    
+
     @OptIn(ExperimentalWasmDsl::class)
     wasmJs {
         moduleName = "composeApp"
@@ -50,7 +51,29 @@ kotlin {
         }
         binaries.executable()
     }
-    
+    cocoapods {
+        summary = "Some description for the Shared Module"
+        homepage = "Link to the Shared Module homepage"
+        version = "1.0"
+        ios.deploymentTarget = "15.4"
+        podfile = project.file("../iosApp/Podfile")
+        framework {
+            baseName = "ComposeApp"
+            isStatic = true
+        }
+
+        pod("GoogleMaps") {
+            version = libs.versions.pods.google.maps.get()
+            extraOpts += listOf("-compiler-option", "-fmodules")
+        }
+
+        pod("Google-Maps-iOS-Utils") {
+            moduleName = "GoogleMapsUtils"
+            version = libs.versions.pods.google.ios.maps.utils.get()
+            extraOpts += listOf("-compiler-option", "-fmodules")
+        }
+
+    }
     sourceSets {
         
         androidMain.dependencies {
