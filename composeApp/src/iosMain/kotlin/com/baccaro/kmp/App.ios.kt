@@ -29,9 +29,6 @@ actual fun GoogleMaps(lat: Double, lon: Double,modifier: Modifier) {
     // 2. Crear el marcador y asociarlo al mapa
     val marker = GMSMarker.markerWithPosition(CLLocationCoordinate2DMake(lat, lon))
     marker.map = mapView // <<-- ESTE ES EL CAMBIO CRUCIAL
-    // mapView.selectedMarker = marker // No necesario para mostrar el marcador
-    // mapView.setSelectedMarker(marker) // No necesario para mostrar el marcador
-
 
     UIKitView(
         modifier = modifier.fillMaxSize(),
