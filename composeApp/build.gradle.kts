@@ -57,6 +57,7 @@ kotlin {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
             implementation(compose.materialIconsExtended)
+            implementation(libs.koin.android)
             implementation(compose.ui)
         }
         commonMain.dependencies {
@@ -70,6 +71,10 @@ kotlin {
             implementation(libs.androidx.lifecycle.runtime.compose)
             implementation(projects.shared)
             implementation(libs.androidx.navigation.compose)
+            implementation(libs.ktor.serialization.json)
+
+            implementation(project.dependencies.platform(libs.koin.bom))
+            implementation(libs.koin.core)
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
         }

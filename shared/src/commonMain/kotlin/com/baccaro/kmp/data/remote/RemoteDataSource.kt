@@ -4,8 +4,9 @@ import PostDto
 import UserDto
 import com.baccaro.kmp.domain.model.PostModel
 import com.baccaro.kmp.domain.model.UserModel
-import com.baccaro.kmp.util.Mapper
 import com.baccaro.kmp.util.OperationResult
+import com.baccaro.kmp.util.PostMapper
+import com.baccaro.kmp.util.UserMapper
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
@@ -25,13 +26,12 @@ interface UserRepository {
 // Repository Implementations
 class NewsRepositoryImpl(
     private val remoteDataSource: NewsRemoteDataSource,
-    private val mapper: Mapper<PostDto, PostModel>
 ) : NewsRepository {
 
     override suspend fun getNewsList(): OperationResult<List<PostModel>> {
         return try {
             val result = remoteDataSource.getNewsList()
-            OperationResult.Success(result.map { mapper.map(it) })
+            OperationResult.Success(result.map { PostMapper().map(it) })
         } catch (e: Exception) {
             OperationResult.Error(e.message ?: "Unknown error")
         }
@@ -40,7 +40,7 @@ class NewsRepositoryImpl(
     override suspend fun getNewsDetails(id: Int): OperationResult<PostModel> {
         return try {
             val result = remoteDataSource.getNewsDetails(id)
-            OperationResult.Success(mapper.map(result))
+            OperationResult.Success(PostMapper().map(result))
         } catch (e: Exception) {
             OperationResult.Error(e.message ?: "Unknown error")
         }
@@ -49,13 +49,12 @@ class NewsRepositoryImpl(
 
 class UserRepositoryImpl(
     private val remoteDataSource: UserRemoteDataSource,
-    private val mapper: Mapper<UserDto, UserModel>
 ) : UserRepository {
 
     override suspend fun getUsersList(): OperationResult<List<UserModel>> {
         return try {
             val result = remoteDataSource.getUsersList()
-            OperationResult.Success(result.map { mapper.map(it) })
+            OperationResult.Success(result.map { UserMapper().map(it) })
         } catch (e: Exception) {
             OperationResult.Error(e.message ?: "Unknown error")
         }
@@ -64,7 +63,7 @@ class UserRepositoryImpl(
     override suspend fun getUserDetails(id: Int): OperationResult<UserModel> {
         return try {
             val result = remoteDataSource.getUserDetails(id)
-            OperationResult.Success(mapper.map(result))
+            OperationResult.Success(UserMapper().map(result))
         } catch (e: Exception) {
             OperationResult.Error(e.message ?: "Unknown error")
         }
@@ -83,6 +82,7 @@ class UserRemoteDataSource(private val apiService: ApiService) {
 }
 
 // API Service
+
 class ApiService(private val httpClient: HttpClient) {
     suspend fun getNewsList(): List<PostDto> {
         return httpClient.get("https://jsonplaceholder.org/posts").body()

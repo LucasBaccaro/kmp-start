@@ -49,8 +49,7 @@ kotlin {
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.contentnegotiation)
             implementation(libs.ktor.serialization.json)
-            implementation(project.dependencies.platform(libs.koin.bom))
-            implementation(libs.koin.core)
+
             implementation(project.dependencies.platform(libs.koin.bom))
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
