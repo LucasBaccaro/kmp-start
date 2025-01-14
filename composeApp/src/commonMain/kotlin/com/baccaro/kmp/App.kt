@@ -37,10 +37,7 @@ import org.koin.core.annotation.KoinExperimentalAPI
 @Preview
 fun App() {
     MaterialTheme {
-        HomeScreen(
-            onNewsClick = {},
-            onUserLocationClick = {}
-        )
+        Navigation()
     }
 }
 
@@ -48,8 +45,8 @@ fun App() {
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel = koinViewModel(),
-    onNewsClick: (PostModel) -> Unit,
-    onUserLocationClick: (UserModel) -> Unit
+    onNewsClick: (Int) -> Unit,
+    onUserLocationClick: (Int) -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -102,13 +99,13 @@ fun HomeScreen(
 @Composable
 fun NewsList(
     news: List<PostModel>,
-    onNewsClick: (PostModel) -> Unit
+    onNewsClick: (Int) -> Unit
 ) {
     LazyColumn {
         items(news) { newsItem ->
             NewsItem(
                 news = newsItem,
-                onClick = { onNewsClick(newsItem) }
+                onClick = { onNewsClick(newsItem.id) }
             )
         }
     }
@@ -117,13 +114,13 @@ fun NewsList(
 @Composable
 fun UsersList(
     users: List<UserModel>,
-    onUserLocationClick: (UserModel) -> Unit
+    onUserLocationClick: (Int) -> Unit
 ) {
     LazyColumn {
         items(users) { user ->
             UserItem(
                 user = user,
-                onLocationClick = { onUserLocationClick(user) }
+                onLocationClick = { onUserLocationClick(user.id) }
             )
         }
     }

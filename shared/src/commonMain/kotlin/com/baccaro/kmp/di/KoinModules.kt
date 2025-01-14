@@ -13,6 +13,8 @@ import com.baccaro.kmp.domain.usecase.GetUserDetailsUseCase
 import com.baccaro.kmp.domain.usecase.GetUsersUseCase
 import com.baccaro.kmp.domain.usecase.SearchNewsUseCase
 import com.baccaro.kmp.presentation.HomeViewModel
+import com.baccaro.kmp.presentation.NewsDetailViewModel
+import com.baccaro.kmp.presentation.UserLocationViewModel
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
@@ -55,6 +57,8 @@ val commonModule = module {
 
     // ViewModels
     viewModel { HomeViewModel(get(), get(), get()) }
+    viewModel { NewsDetailViewModel(get()) }
+    viewModel { UserLocationViewModel(get()) }
 }
 fun initializeKoin(config: (KoinApplication.() -> Unit)? = null) {
     startKoin {
