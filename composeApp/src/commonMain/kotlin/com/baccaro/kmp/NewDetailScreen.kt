@@ -77,7 +77,11 @@ fun NewsDetailScreen(
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Text("Error: ${state.error}", modifier = Modifier.padding(16.dp), color = MaterialTheme.colorScheme.error)
+                        Text(
+                            "Error: ${state.error}",
+                            modifier = Modifier.padding(16.dp),
+                            color = MaterialTheme.colorScheme.error
+                        )
                         Spacer(modifier = Modifier.height(8.dp))
                         Button(onClick = { viewModel.loadNewsDetails(newsId) }) {
                             Text("Reintentar")
@@ -105,24 +109,18 @@ fun NewsDetailContent(news: PostModel) {
             painter = painter,
             contentDescription = "image",
         )
-
         Spacer(Modifier.height(16.dp))
-
         Text(
             text = news.title,
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold
         )
-
         Spacer(Modifier.height(8.dp))
-
         Text(
             text = news.content,
             style = MaterialTheme.typography.bodySmall
         )
-
         Spacer(Modifier.height(8.dp))
-
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween

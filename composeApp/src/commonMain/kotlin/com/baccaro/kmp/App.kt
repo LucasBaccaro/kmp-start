@@ -21,7 +21,6 @@ import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardElevation
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -43,7 +42,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil3.annotation.ExperimentalCoilApi
 import com.baccaro.kmp.domain.model.Coordinates
 import com.baccaro.kmp.domain.model.PostModel
 import com.baccaro.kmp.domain.model.Tab
@@ -227,7 +225,7 @@ fun UserItem(user: UserModel, onLocationClick: () -> Unit) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
-            .clickable { }, // Make the whole card clickable, if needed
+            .clickable { },
         shape = RoundedCornerShape(8.dp)
 
     ) {
@@ -238,24 +236,19 @@ fun UserItem(user: UserModel, onLocationClick: () -> Unit) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-
-            // Add a placeholder/default image if user image is not available
             Image(
-                imageVector = Icons.Default.Person,  // Replace with actual image logic if available
+                imageVector = Icons.Default.Person,
                 contentDescription = "User Avatar",
                 modifier = Modifier
                     .size(64.dp)
                     .clip(RoundedCornerShape(32.dp))
-                    .background(Color.LightGray) // Placeholder background
+                    .background(Color.LightGray)
             )
-
             Column(modifier = Modifier.weight(1f)) {
                 Text(text = user.fullName, fontWeight = FontWeight.Bold)
                 Text(text = user.email)
-                Text(text = user.city) // Now included
+                Text(text = user.city)
             }
-
-
             IconButton(onClick = onLocationClick) {
                 Icon(imageVector = Icons.Default.LocationOn, contentDescription = "Location")
             }

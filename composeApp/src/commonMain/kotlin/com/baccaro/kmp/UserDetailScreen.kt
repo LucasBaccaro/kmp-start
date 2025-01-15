@@ -55,10 +55,12 @@ fun UserLocationScreen(
                 state.isLoading -> CircularProgressIndicator(
                     modifier = Modifier.align(Alignment.Center)
                 )
+
                 state.error != null -> Text(
                     text = state.error!!,
                     modifier = Modifier.padding(16.dp)
                 )
+
                 state.user != null -> {
                     GoogleMaps(state.user!!.location.latitude, state.user!!.location.longitude)
                 }
