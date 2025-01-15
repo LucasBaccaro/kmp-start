@@ -28,6 +28,9 @@ kotlin {
             implementation(libs.ktor.client.okhttp)
             implementation(libs.koin.android)
         }
+        commonTest.dependencies {
+            implementation(kotlin("test"))
+        }
         commonMain.dependencies {
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.contentnegotiation)
