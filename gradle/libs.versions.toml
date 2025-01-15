@@ -16,6 +16,7 @@ junit = "4.13.2"
 kotlin = "2.1.0"
 ktor = "3.0.2"
 logback = "1.5.12"
+coilComposeCore = "3.0.0-alpha06"
 
 #Extra versions.
 koin = "4.0.0"
@@ -60,6 +61,11 @@ androidx-navigation-compose = { group = "org.jetbrains.androidx.navigation", nam
 maps-compose = { module = "com.google.maps.android:maps-compose", version.ref = "mapsCompose" }
 maps-compose-utils = { module = "com.google.maps.android:maps-compose-utils", version.ref = "mapsCompose" }
 play-services-maps = { module = "com.google.android.gms:play-services-maps", version.ref = "playServicesMaps" }
+
+coil = { module = "io.coil-kt.coil3:coil", version.ref = "coilComposeCore" }
+coil-compose-core = { module = "io.coil-kt.coil3:coil-compose-core", version.ref = "coilComposeCore" }
+coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilComposeCore" }
+coil-network-ktor = { module = "io.coil-kt.coil3:coil-network-ktor", version.ref = "coilComposeCore" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
