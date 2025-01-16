@@ -18,6 +18,8 @@ object Users : IntIdTable() {  // Usamos IntIdTable para IDs autoincrementales
         Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
     )
     val estado = enumeration("estado", EstadoUsuario::class).default(EstadoUsuario.EN_PROGRESO)
+    val latitude = varchar("latitude",50)
+    val longitude = varchar("longitude",50)
 }
 
 object Clients : IntIdTable() {

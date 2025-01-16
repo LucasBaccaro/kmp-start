@@ -8,10 +8,6 @@ import org.simplejavamail.api.mailer.config.TransportStrategy
 import org.simplejavamail.email.EmailBuilder
 import org.simplejavamail.mailer.MailerBuilder
 
-
-// ... (Otras importaciones)
-
-
 class EmailService(private val config: EmailConfig) { // Recibe la configuración del email
 
     data class EmailConfig(

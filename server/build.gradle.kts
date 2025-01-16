@@ -32,4 +32,8 @@ dependencies {
     implementation("org.postgresql:postgresql:42.6.0") // Driver de PostgreSQL
     implementation("org.simplejavamail:simple-java-mail:7.7.1")
     implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:0.8.1")
+
+    implementation("io.ktor:ktor-server-auth:3.0.2")
+    implementation("io.ktor:ktor-server-auth-jwt:3.0.2")
+    implementation("org.mindrot:jbcrypt:0.4")
 }

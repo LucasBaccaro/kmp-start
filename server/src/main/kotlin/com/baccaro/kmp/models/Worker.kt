@@ -29,7 +29,15 @@ data class User(
         .toLocalDateTime(TimeZone.currentSystemDefault()),
     val actualizadoEn: LocalDateTime = Clock.System.now()
         .toLocalDateTime(TimeZone.currentSystemDefault()),
-    val estado: EstadoUsuario = EstadoUsuario.EN_PROGRESO
+    val estado: EstadoUsuario = EstadoUsuario.EN_PROGRESO,
+    val latitude: String,
+    val longitude: String
+)
+
+@Serializable
+data class LoginRequest(
+    val email: String,
+    val password: String
 )
 
 @Serializable
@@ -38,6 +46,24 @@ data class Client(
     val usuario: User,
     val direccion: String,
     val instruccionesAdicionales: String? = null
+)
+
+@Serializable
+data class AuthResponse(
+    val token: String,
+    val user: User
+)
+
+@Serializable
+data class WorkerRegistrationResponse(
+    val token: String,
+    val worker: Worker
+)
+
+@Serializable
+data class ClientRegistrationResponse(
+    val token: String,
+    val client: Client
 )
 
 @Serializable

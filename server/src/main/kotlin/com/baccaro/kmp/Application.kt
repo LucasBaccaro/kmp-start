@@ -2,16 +2,17 @@ package com.baccaro.kmp
 
 import ClientRepository
 import WorkerRepository
+import com.baccaro.kmp.plugins.configureAuthentication
 import com.baccaro.kmp.plugins.configureRouting
 import com.baccaro.kmp.plugins.db.DatabaseFactory
+import com.baccaro.kmp.repositories.LoginRepository
 import com.baccaro.kmp.services.ClientService
 import com.baccaro.kmp.services.EmailService
+import com.baccaro.kmp.services.LoginService
 import com.baccaro.kmp.services.WorkerService
-import com.typesafe.config.ConfigFactory
 import com.zaxxer.hikari.HikariConfig
 import configureSerialization
 import io.ktor.server.application.Application
-import io.ktor.server.config.HoconApplicationConfig
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 
@@ -49,5 +50,8 @@ fun Application.module() {
     val clientService = ClientService(ClientRepository())
     val emailService = EmailService(emailConfig)
     val workerService = WorkerService(WorkerRepository(), emailService)
-    configureRouting(clientService, workerService)
+    val loginService = LoginService(LoginRepository())
+    configureAuthentication()
+    configureRouting(clientService, workerService, loginService)
+
 }

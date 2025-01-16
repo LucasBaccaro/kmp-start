@@ -25,6 +25,8 @@ class WorkerRepository {
             it[creadoEn] = worker.usuario.creadoEn
             it[actualizadoEn] = worker.usuario.actualizadoEn
             it[estado] = worker.usuario.estado
+            it[latitude] = worker.usuario.latitude
+            it[longitude] = worker.usuario.longitude
         } get Users.id
 
 
@@ -83,7 +85,9 @@ class WorkerRepository {
         tipoUsuario = row[Users.tipoUsuario],
         creadoEn = row[Users.creadoEn],
         actualizadoEn = row[Users.actualizadoEn],
-        estado = row[Users.estado]
+        estado = row[Users.estado],
+        latitude = row[Users.latitude],
+        longitude = row[Users.longitude]
     )
 
     suspend fun updateWorker(worker: Worker): Worker = dbQuery {
@@ -105,6 +109,10 @@ class WorkerRepository {
 
         // Obtener el worker actualizado. No es necesario volver a consultarlo, se puede reconstruir
         // a partir de los datos existentes, ya que solo la base de datos tiene los datos actualizados.
-        worker.copy(usuario = worker.usuario.copy(actualizadoEn = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())))
+        worker.copy(
+            usuario = worker.usuario.copy(
+                actualizadoEn = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+            )
+        )
     }
 }

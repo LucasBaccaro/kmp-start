@@ -19,6 +19,9 @@ object DatabaseFactory {
         // Crea las tablas dentro de una transacción
         transaction {
             SchemaUtils.create(Users, Clients, Workers, ServiceRequests, Reviews, ChatMessages)
+            //SchemaUtils.drop(Users, Clients, Workers, ServiceRequests, Reviews, ChatMessages)
         }
     }
 }
+
+//

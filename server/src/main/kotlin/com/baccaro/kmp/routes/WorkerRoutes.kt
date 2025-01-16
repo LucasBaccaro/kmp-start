@@ -1,6 +1,8 @@
+import com.baccaro.kmp.plugins.JwtConfig
 import com.baccaro.kmp.services.WorkerService
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.Application
+import io.ktor.server.auth.authenticate
 import io.ktor.server.request.receive
 import io.ktor.server.response.respond
 import io.ktor.server.routing.get
@@ -12,48 +14,54 @@ import kotlinx.serialization.SerializationException
 
 fun Application.workerRoutes(workerService: WorkerService) {
     routing {
-        route("/workers") {
-            post {
-                try {
-                    val worker = call.receive<Worker>()
-                    val createdWorker = workerService.createWorker(worker)
-                    call.respond(HttpStatusCode.Created, createdWorker)
-                } catch (e: SerializationException) {
-                    call.respond(HttpStatusCode.BadRequest, mapOf("error" to (e.message ?: "Error de serialización")))
-                } catch (e: Exception) {
-                    call.respond(HttpStatusCode.BadRequest, mapOf("error" to (e.message ?: "Error desconocido")))
-                }
+        // Ruta de registro (pública)
+        post("/register/worker") {
+            try {
+                val worker = call.receive<Worker>()
+                val createdWorker = workerService.createWorker(worker)
+                val token = JwtConfig.makeToken(createdWorker.usuario)
+                call.respond(HttpStatusCode.Created, WorkerRegistrationResponse(token, createdWorker))
+            } catch (e: SerializationException) {
+                call.respond(HttpStatusCode.BadRequest, "Error de serialización: ${e.message}")
+            } catch (e: Exception) {
+                call.respond(HttpStatusCode.BadRequest, "Error desconocido: ${e.message}")
             }
+        }
 
-            get { // Ruta para obtener TODOS los workers
-                try {
-                    val allWorkers = workerService.getAllWorkers()
-                    call.respond(allWorkers)
-                } catch (e: Exception) {
-                    call.respond(HttpStatusCode.BadRequest, mapOf("error" to (e.message ?: "Error al obtener todos los workers")))
-                }
-            }
-
-            get("{id}") { // Ruta para obtener un worker por ID
-                val workerId = call.parameters["id"]?.toIntOrNull() ?: return@get call.respond(HttpStatusCode.BadRequest)
-                try {
-                    val worker = workerService.findWorkerById(workerId)
-                    if (worker == null) {
-                        call.respond(HttpStatusCode.NotFound)
-                    } else {
-                        call.respond(worker)
+        // Rutas protegidas
+        authenticate {
+            route("/workers") {
+                get {
+                    try {
+                        val allWorkers = workerService.getAllWorkers()
+                        call.respond(allWorkers)
+                    } catch (e: Exception) {
+                        call.respond(HttpStatusCode.BadRequest, mapOf("error" to (e.message ?: "Error al obtener todos los workers")))
                     }
-                } catch (e: Exception) {
-                    call.respond(HttpStatusCode.BadRequest, mapOf("error" to (e.message ?: "Error al obtener el worker")))
                 }
-            }
-            put("{id}/validate") { // Nueva ruta para validación
-                val workerId = call.parameters["id"]?.toIntOrNull() ?: return@put call.respond(HttpStatusCode.BadRequest)
-                val updatedWorker = workerService.validateWorker(workerId)
-                if (updatedWorker != null) {
-                    call.respond(HttpStatusCode.OK, updatedWorker)
-                } else {
-                    call.respond(HttpStatusCode.NotFound)
+
+                get("{id}") {
+                    val workerId = call.parameters["id"]?.toIntOrNull() ?: return@get call.respond(HttpStatusCode.BadRequest)
+                    try {
+                        val worker = workerService.findWorkerById(workerId)
+                        if (worker == null) {
+                            call.respond(HttpStatusCode.NotFound)
+                        } else {
+                            call.respond(worker)
+                        }
+                    } catch (e: Exception) {
+                        call.respond(HttpStatusCode.BadRequest, mapOf("error" to (e.message ?: "Error al obtener el worker")))
+                    }
+                }
+
+                put("{id}/validate") {
+                    val workerId = call.parameters["id"]?.toIntOrNull() ?: return@put call.respond(HttpStatusCode.BadRequest)
+                    val updatedWorker = workerService.validateWorker(workerId)
+                    if (updatedWorker != null) {
+                        call.respond(HttpStatusCode.OK, updatedWorker)
+                    } else {
+                        call.respond(HttpStatusCode.NotFound)
+                    }
                 }
             }
         }

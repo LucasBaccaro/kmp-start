@@ -1,6 +1,8 @@
+import com.baccaro.kmp.plugins.JwtConfig
 import com.baccaro.kmp.services.ClientService
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.Application
+import io.ktor.server.auth.authenticate
 import io.ktor.server.request.receive
 import io.ktor.server.response.respond
 import io.ktor.server.routing.get
@@ -11,40 +13,44 @@ import kotlinx.serialization.SerializationException
 
 fun Application.clientRoutes(clientService: ClientService) {
     routing {
-        route("/clients") {
-            post {
-                try {
-                    val client = call.receive<Client>()
-                    val createdClient = clientService.createClient(client)
-                    call.respond(HttpStatusCode.Created, createdClient)
-                } catch (e: SerializationException) {
-                    call.respond(HttpStatusCode.BadRequest, mapOf("error" to (e.message ?: "Error de serialización")))
-                } catch (e: Exception) {
-                    call.respond(HttpStatusCode.BadRequest, mapOf("error" to (e.message ?: "Error desconocido")))
-                }
+        // Ruta de registro (pública)
+        post("/register/client") {
+            try {
+                val client = call.receive<Client>()
+                val createdClient = clientService.createClient(client)
+                val token = JwtConfig.makeToken(createdClient.usuario)
+                call.respond(HttpStatusCode.Created, ClientRegistrationResponse(token, createdClient))
+            } catch (e: SerializationException) {
+                call.respond(HttpStatusCode.BadRequest, "Error de serialización: ${e.message}")
+            } catch (e: Exception) {
+                call.respond(HttpStatusCode.BadRequest, "Error desconocido: ${e.message}")
             }
+        }
 
-
-            get { // Ruta para obtener TODOS los workers
-                try {
-                    val allClients = clientService.getAllClients()
-                    call.respond(allClients)
-                } catch (e: Exception) {
-                    call.respond(HttpStatusCode.BadRequest, mapOf("error" to (e.message ?: "Error al obtener todos los clientes")))
-                }
-            }
-
-            get("{id}") { // Ruta para obtener un cliente por ID
-                val clientId = call.parameters["id"]?.toIntOrNull() ?: return@get call.respond(HttpStatusCode.BadRequest)
-                try {
-                    val client = clientService.findClientById(clientId)
-                    if (client == null) {
-                        call.respond(HttpStatusCode.NotFound)
-                    } else {
-                        call.respond(client)
+        // Rutas protegidas
+        authenticate {
+            route("/clients") {
+                get {
+                    try {
+                        val allClients = clientService.getAllClients()
+                        call.respond(allClients)
+                    } catch (e: Exception) {
+                        call.respond(HttpStatusCode.BadRequest, mapOf("error" to (e.message ?: "Error al obtener todos los clientes")))
                     }
-                } catch (e: Exception) {
-                    call.respond(HttpStatusCode.BadRequest, mapOf("error" to (e.message ?: "Error al obtener el clientes")))
+                }
+
+                get("{id}") {
+                    val clientId = call.parameters["id"]?.toIntOrNull() ?: return@get call.respond(HttpStatusCode.BadRequest)
+                    try {
+                        val client = clientService.findClientById(clientId)
+                        if (client == null) {
+                            call.respond(HttpStatusCode.NotFound)
+                        } else {
+                            call.respond(client)
+                        }
+                    } catch (e: Exception) {
+                        call.respond(HttpStatusCode.BadRequest, mapOf("error" to (e.message ?: "Error al obtener el cliente")))
+                    }
                 }
             }
         }

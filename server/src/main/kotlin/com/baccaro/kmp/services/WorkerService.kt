@@ -2,13 +2,17 @@ package com.baccaro.kmp.services
 
 import Worker
 import WorkerRepository
+import org.mindrot.jbcrypt.BCrypt
 
 class WorkerService(private val workerRepository: WorkerRepository, private val emailService: EmailService) {
 
     suspend fun createWorker(worker: Worker): Worker {
-        val createdWorker = workerRepository.createWorker(worker)
-        emailService.sendWorkerValidationEmail(createdWorker, false)
-        return createdWorker
+        val hashedPassword = BCrypt.hashpw(worker.usuario.contrasena, BCrypt.gensalt())
+        val workerWithHashedPassword = worker.copy(
+            usuario = worker.usuario.copy(contrasena = hashedPassword)
+        )
+        emailService.sendWorkerValidationEmail(workerWithHashedPassword, false)
+        return workerRepository.createWorker(workerWithHashedPassword)
     }
 
     suspend fun getAllWorkers(): List<Worker> = workerRepository.getAllWorkers()

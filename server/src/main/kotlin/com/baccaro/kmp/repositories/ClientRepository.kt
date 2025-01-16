@@ -19,6 +19,8 @@ class ClientRepository {
             it[creadoEn] = client.usuario.creadoEn
             it[actualizadoEn] = client.usuario.actualizadoEn
             it[estado] = client.usuario.estado
+            it[latitude] = client.usuario.latitude
+            it[longitude] = client.usuario.longitude
         } get Users.id
 
         val insertedId = Clients.insert {
@@ -74,6 +76,8 @@ class ClientRepository {
         tipoUsuario = row[Users.tipoUsuario],
         creadoEn = row[Users.creadoEn],
         actualizadoEn = row[Users.actualizadoEn],
-        estado = row[Users.estado]
+        estado = row[Users.estado],
+        latitude = row[Users.latitude],
+        longitude = row[Users.longitude]
     )
 }
