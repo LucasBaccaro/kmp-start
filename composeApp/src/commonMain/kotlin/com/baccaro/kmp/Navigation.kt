@@ -1,55 +1,81 @@
 package com.baccaro.kmp
 
-import androidx.compose.foundation.layout.fillMaxSize
+import CategoryDetailScreen
+import ClientScaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import com.baccaro.kmp.presentation.HomeViewModel
-import com.baccaro.kmp.presentation.NewsDetailViewModel
-import com.baccaro.kmp.presentation.UserLocationViewModel
+import com.baccaro.kmp.presentation.auth.LoginScreen
+import com.baccaro.kmp.presentation.auth.RegisterScreen
+import com.baccaro.kmp.presentation.auth.RegisterWorkerScreen
+import com.baccaro.kmp.presentation.worker.WorkerHomeScreen
 import kotlinx.serialization.Serializable
-import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun Navigation() {
     val navController = rememberNavController()
+
     NavHost(
-        modifier = Modifier.fillMaxSize(),
         navController = navController,
-        startDestination = Home
+        startDestination = Login
     ) {
-        composable<Home> {
-            val homeViewModel: HomeViewModel = koinViewModel()
-            HomeScreen(
-                viewModel = homeViewModel,
-                onNewsClick = { newsId ->
-                    navController.navigate(NewsDetail(newsId))
+        composable<Login> {
+            LoginScreen(
+                onRegisterClick = { navController.navigate(Register) },
+                onWorkerLoginSuccess = {
+                    navController.navigate(WorkerHome) {
+                        popUpTo(Login) { inclusive = true }
+                    }
                 },
-                onUserLocationClick = { userId ->
-                    navController.navigate(UserLocation(userId))
+                onClientLoginSuccess = {
+                    navController.navigate(ClientHome) {
+                        popUpTo(Login) { inclusive = true }
+                    }
                 }
             )
         }
 
-        composable<NewsDetail> { backStackEntry ->
-            val args = backStackEntry.toRoute<NewsDetail>()
-            val viewModel: NewsDetailViewModel = koinViewModel()
-            NewsDetailScreen(
-                newsId = args.newsId,
-                viewModel = viewModel,
-                onBackClick = { navController.popBackStack() }
+        composable<Register> {
+            RegisterScreen(
+                onBackClick = { navController.popBackStack() },
+                onRegisterSuccess = {
+                    navController.navigate(Login) {
+                        popUpTo(Register) { inclusive = true }
+                    }
+                },
+                onWorkerRegisterClick = { navController.navigate(RegisterWorker) }
             )
         }
 
-        composable<UserLocation> { backStackEntry ->
-            val args = backStackEntry.toRoute<UserLocation>()
-            val viewModel: UserLocationViewModel = koinViewModel()
-            UserLocationScreen(
-                userId = args.userId,
-                viewModel = viewModel,
+        composable<RegisterWorker> {
+            RegisterWorkerScreen(
+                onBackClick = { navController.popBackStack() },
+                onRegisterSuccess = {
+                    navController.navigate(Login) {
+                        popUpTo(RegisterWorker) { inclusive = true }
+                    }
+                }
+            )
+        }
+
+        composable<WorkerHome> {
+            WorkerHomeScreen()
+        }
+
+        composable<ClientHome> {
+            ClientScaffold(
+                onCategoryClick = { categoryId ->
+                    navController.navigate(CategoryDetail(categoryId))
+                }
+            )
+        }
+
+        composable<CategoryDetail> { backStackEntry ->
+            val args = backStackEntry.toRoute<CategoryDetail>()
+            CategoryDetailScreen(
+                categoryId = args.categoryId,
                 onBackClick = { navController.popBackStack() }
             )
         }
@@ -57,10 +83,19 @@ fun Navigation() {
 }
 
 @Serializable
-object Home
+object Login
 
 @Serializable
-data class NewsDetail(val newsId: Int)
+object Register
 
 @Serializable
-data class UserLocation(val userId: Int)
+object RegisterWorker
+
+@Serializable
+object WorkerHome
+
+@Serializable
+object ClientHome
+
+@Serializable
+data class CategoryDetail(val categoryId: String)

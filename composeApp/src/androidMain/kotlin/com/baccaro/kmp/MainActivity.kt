@@ -9,11 +9,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.baccaro.kmp.di.initializeKoin
 import org.koin.android.ext.koin.androidContext
 
-
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContent {
             App()
         }
@@ -23,9 +21,9 @@ class MainActivity : ComponentActivity() {
 class AndroidApp : Application() {
     override fun onCreate() {
         super.onCreate()
-        initializeKoin(
-            config = { androidContext(this@AndroidApp) }
-        )
+        initializeKoin {
+            androidContext(this@AndroidApp)
+        }
     }
 }
 

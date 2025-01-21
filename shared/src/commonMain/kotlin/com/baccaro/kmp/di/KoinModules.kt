@@ -60,9 +60,3 @@ val commonModule = module {
     viewModel { NewsDetailViewModel(get()) }
     viewModel { UserLocationViewModel(get()) }
 }
-fun initializeKoin(config: (KoinApplication.() -> Unit)? = null) {
-    startKoin {
-        config?.invoke(this)
-        modules(commonModule)
-    }
-}

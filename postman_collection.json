@@ -1,0 +1,426 @@
+{
+	"info": {
+		"_postman_id": "1234567-89ab-cdef-0123-456789abcdef",
+		"name": "Servicios App",
+		"description": "API para la aplicación de servicios",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Register Worker",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"worker@example.com\",\n    \"password\": \"123456\",\n    \"name\": \"Juan Worker\",\n    \"phone\": \"1234567890\",\n    \"role\": \"worker\",\n    \"location\": \"-34.603722,-58.381592\",\n    \"categoryId\": \"CATEGORY_ID\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/register",
+							"host": ["{{base_url}}"],
+							"path": ["api", "auth", "register"]
+						},
+						"description": "Registro de un nuevo trabajador"
+					}
+				},
+				{
+					"name": "Register Client",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"client@example.com\",\n    \"password\": \"123456\",\n    \"name\": \"Pedro Client\",\n    \"phone\": \"0987654321\",\n    \"role\": \"client\",\n    \"location\": \"-34.603722,-58.381592\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/register",
+							"host": ["{{base_url}}"],
+							"path": ["api", "auth", "register"]
+						},
+						"description": "Registro de un nuevo cliente"
+					}
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"user@example.com\",\n    \"password\": \"123456\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/login",
+							"host": ["{{base_url}}"],
+							"path": ["api", "auth", "login"]
+						},
+						"description": "Inicio de sesión para cualquier usuario. Devuelve un objeto con el token de autenticación y la información del usuario (id, email, nombre, rol, ubicación)."
+					}
+				}
+			]
+		},
+		{
+			"name": "Categories",
+			"item": [
+				{
+					"name": "Get All Categories",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/categories",
+							"host": ["{{base_url}}"],
+							"path": ["api", "categories"]
+						},
+						"description": "Obtener todas las categorías disponibles"
+					}
+				},
+				{
+					"name": "Get Category By Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/categories/:id",
+							"host": ["{{base_url}}"],
+							"path": ["api", "categories", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "CATEGORY_ID"
+								}
+							]
+						},
+						"description": "Obtener una categoría específica"
+					}
+				},
+				{
+					"name": "Get Workers By Category",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/categories/:id/workers",
+							"host": ["{{base_url}}"],
+							"path": ["api", "categories", ":id", "workers"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "CATEGORY_ID"
+								}
+							]
+						},
+						"description": "Obtener todos los workers de una categoría"
+					}
+				},
+				{
+					"name": "Create Category (Admin)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Plomería\",\n    \"description\": \"Servicios de plomería y fontanería\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/categories",
+							"host": ["{{base_url}}"],
+							"path": ["api", "categories"]
+						},
+						"description": "Crear una nueva categoría (solo admin)"
+					}
+				}
+			]
+		},
+		{
+			"name": "Services",
+			"item": [
+				{
+					"name": "Create Service Request",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"workerId\": \"WORKER_ID\",\n    \"description\": \"Necesito arreglar una tubería que gotea\",\n    \"location\": \"-34.603722,-58.381592\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/services",
+							"host": ["{{base_url}}"],
+							"path": ["api", "services"]
+						},
+						"description": "Cliente crea una solicitud de servicio"
+					}
+				},
+				{
+					"name": "Get Worker Services",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/workers/services",
+							"host": ["{{base_url}}"],
+							"path": ["api", "workers", "services"]
+						},
+						"description": "Worker obtiene sus servicios"
+					}
+				},
+				{
+					"name": "Get Client Services",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/workers/client/services",
+							"host": ["{{base_url}}"],
+							"path": ["api", "workers", "client", "services"]
+						},
+						"description": "Cliente obtiene sus servicios"
+					}
+				},
+				{
+					"name": "Accept Service",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/services/:id/accept",
+							"host": ["{{base_url}}"],
+							"path": ["api", "services", ":id", "accept"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "SERVICE_ID"
+								}
+							]
+						},
+						"description": "Worker acepta un servicio"
+					}
+				},
+				{
+					"name": "Reject Service",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/services/:id/reject",
+							"host": ["{{base_url}}"],
+							"path": ["api", "services", ":id", "reject"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "SERVICE_ID"
+								}
+							]
+						},
+						"description": "Worker rechaza un servicio"
+					}
+				},
+				{
+					"name": "Complete Service",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/services/:id/complete",
+							"host": ["{{base_url}}"],
+							"path": ["api", "services", ":id", "complete"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "SERVICE_ID"
+								}
+							]
+						},
+						"description": "Worker marca un servicio como completado"
+					}
+				},
+				{
+					"name": "Rate Service",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"rating\": 5\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/services/:id/rate",
+							"host": ["{{base_url}}"],
+							"path": ["api", "services", ":id", "rate"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "SERVICE_ID"
+								}
+							]
+						},
+						"description": "Cliente califica un servicio completado"
+					}
+				}
+			]
+		},
+		{
+			"name": "Workers",
+			"item": [
+				{
+					"name": "Get Workers By Location",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/workers/nearby/:categoryId?maxDistance=10",
+							"host": ["{{base_url}}"],
+							"path": ["api", "workers", "nearby", ":categoryId"],
+							"query": [
+								{
+									"key": "maxDistance",
+									"value": "10"
+								}
+							],
+							"variable": [
+								{
+									"key": "categoryId",
+									"value": "CATEGORY_ID"
+								}
+							]
+						},
+						"description": "Obtener workers cercanos por categoría"
+					}
+				},
+				{
+					"name": "Get Worker Categories",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/workers/categories",
+							"host": ["{{base_url}}"],
+							"path": ["api", "workers", "categories"]
+						},
+						"description": "Obtener todas las categorías con workers"
+					}
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:3000",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "YOUR_JWT_TOKEN",
+			"type": "string"
+		}
+	]
+} 

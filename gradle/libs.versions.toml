@@ -17,6 +17,7 @@ kotlin = "2.1.0"
 ktor = "3.0.2"
 logback = "1.5.12"
 coilComposeCore = "3.0.0-alpha06"
+datetime = "0.6.0"
 
 #Extra versions.
 koin = "4.0.0"
@@ -45,6 +46,7 @@ logback = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
 ktor-server-core = { module = "io.ktor:ktor-server-core-jvm", version.ref = "ktor" }
 ktor-server-netty = { module = "io.ktor:ktor-server-netty-jvm", version.ref = "ktor" }
 ktor-server-tests = { module = "io.ktor:ktor-server-tests-jvm", version.ref = "ktor" }
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "datetime"}
 
 #Extra dependencies.
 ktor-client-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor" }
