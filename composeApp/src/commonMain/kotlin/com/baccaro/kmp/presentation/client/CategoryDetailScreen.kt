@@ -40,6 +40,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import Worker
 import androidx.compose.runtime.setValue
 import org.koin.compose.viewmodel.koinViewModel
+import Notify
+import NotificationDuration
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -56,7 +58,7 @@ fun CategoryDetailScreen(
 
     if (state.showSuccessMessage) {
         LaunchedEffect(Unit) {
-            // Mostrar snackbar o mensaje de éxito
+            Notify(message = "Servicio solicitado con éxito", duration = NotificationDuration.SHORT)
             viewModel.onSuccessMessageShown()
         }
     }
@@ -85,8 +87,11 @@ fun CategoryDetailScreen(
                     )
                 }
                 state.error != null -> {
+                    LaunchedEffect(state.error) {
+                        Notify(message = "Ha ocurrido un error", duration = NotificationDuration.LONG)
+                    }
                     Text(
-                        text = state.error ?: "Error desconocido",
+                        text = "Ha ocurrido un error",
                         color = MaterialTheme.colorScheme.error,
                         modifier = Modifier
                             .align(Alignment.Center)

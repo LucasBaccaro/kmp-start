@@ -84,7 +84,7 @@ kotlin {
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
             api("io.github.qdsfdhvh:image-loader:1.9.0")
-            implementation(libs.kotlinx.datetime)
+            implementation("io.github.khubaibkhan4:alert-kmp:2.0.0")
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)

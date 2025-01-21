@@ -1,5 +1,7 @@
 package com.baccaro.kmp.presentation.worker
 
+import Notify
+import NotificationDuration
 import ServiceDetailsBottomSheet
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -76,8 +78,11 @@ fun WorkerHomeScreen(
                     )
                 }
                 state.error != null -> {
+                    LaunchedEffect(state.error) {
+                        Notify(message = "Ha ocurrido un error", duration = NotificationDuration.LONG)
+                    }
                     Text(
-                        text = state.error ?: "Error desconocido",
+                        text = "Ha ocurrido un error",
                         color = MaterialTheme.colorScheme.error,
                         modifier = Modifier
                             .align(Alignment.Center)
@@ -116,14 +121,17 @@ fun WorkerHomeScreen(
             isWorker = true,
             onDismiss = { selectedService = null },
             onAccept = {
+                Notify(message = "Servicio aceptado", duration = NotificationDuration.SHORT)
                 viewModel.acceptService(service.id)
                 selectedService = null
             },
             onReject = {
+                Notify(message = "Servicio rechazado", duration = NotificationDuration.SHORT)
                 viewModel.rejectService(service.id)
                 selectedService = null
             },
             onComplete = {
+                Notify(message = "Servicio completado", duration = NotificationDuration.SHORT)
                 viewModel.completeService(service.id)
                 selectedService = null
             }

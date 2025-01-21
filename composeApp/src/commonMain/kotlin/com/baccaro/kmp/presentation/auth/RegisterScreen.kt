@@ -1,5 +1,7 @@
 package com.baccaro.kmp.presentation.auth
 
+import Notify
+import NotificationDuration
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
@@ -9,6 +11,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -97,7 +100,12 @@ fun RegisterScreen(
             )
 
             Button(
-                onClick = { viewModel.onRegisterClick(onRegisterSuccess) },
+                onClick = {
+                    viewModel.onRegisterClick { 
+                        Notify(message = "¡Registro exitoso!", duration = NotificationDuration.SHORT)
+                        onRegisterSuccess()
+                    } 
+                },
                 modifier = Modifier.fillMaxWidth(),
                 enabled = !state.isLoading
             ) {
@@ -116,8 +124,11 @@ fun RegisterScreen(
             }
 
             state.error?.let { error ->
+                LaunchedEffect(error) {
+                    Notify(message = "Ha ocurrido un error", duration = NotificationDuration.LONG)
+                }
                 Text(
-                    text = error,
+                    text = "Ha ocurrido un error",
                     color = MaterialTheme.colorScheme.error
                 )
             }

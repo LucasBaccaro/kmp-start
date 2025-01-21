@@ -1,5 +1,7 @@
 package com.baccaro.kmp.presentation.auth
 
+import Notify
+import NotificationDuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -171,7 +173,12 @@ fun RegisterWorkerScreen(
             }
 
             Button(
-                onClick = { viewModel.onRegisterClick(onRegisterSuccess) },
+                onClick = {
+                    viewModel.onRegisterClick { 
+                        Notify(message = "¡Registro exitoso!", duration = NotificationDuration.SHORT)
+                        onRegisterSuccess()
+                    } 
+                },
                 modifier = Modifier.fillMaxWidth(),
                 enabled = !state.isLoading
             ) {
@@ -186,8 +193,11 @@ fun RegisterWorkerScreen(
             }
 
             state.error?.let { error ->
+                LaunchedEffect(error) {
+                    Notify(message = "Ha ocurrido un error", duration = NotificationDuration.LONG)
+                }
                 Text(
-                    text = error,
+                    text = "Ha ocurrido un error",
                     color = MaterialTheme.colorScheme.error
                 )
             }

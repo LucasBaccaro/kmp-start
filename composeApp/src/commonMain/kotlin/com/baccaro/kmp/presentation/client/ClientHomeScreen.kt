@@ -9,6 +9,7 @@ import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,6 +20,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.baccaro.kmp.domain.model.Category
 import org.koin.compose.viewmodel.koinViewModel
+import Notify
+import NotificationDuration
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -47,8 +50,11 @@ fun ClientHomeScreen(
                     )
                 }
                 state.error != null -> {
+                    LaunchedEffect(state.error) {
+                        Notify(message = "Ha ocurrido un error", duration = NotificationDuration.LONG)
+                    }
                     Text(
-                        text = state.error ?: "Error desconocido",
+                        text = "Ha ocurrido un error",
                         color = MaterialTheme.colorScheme.error,
                         modifier = Modifier
                             .align(Alignment.Center)

@@ -12,6 +12,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -22,6 +23,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.baccaro.kmp.domain.model.Service
 import org.koin.compose.viewmodel.koinViewModel
+import Notify
+import NotificationDuration
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -50,8 +53,11 @@ fun ClientServicesScreen(
                     )
                 }
                 state.error != null -> {
+                    LaunchedEffect(state.error) {
+                        Notify(message = "Ha ocurrido un error", duration = NotificationDuration.LONG)
+                    }
                     Text(
-                        text = state.error ?: "Error desconocido",
+                        text = "Ha ocurrido un error",
                         color = MaterialTheme.colorScheme.error,
                         modifier = Modifier
                             .align(Alignment.Center)
@@ -91,6 +97,7 @@ fun ClientServicesScreen(
             onDismiss = { selectedService = null },
             onRate = { serviceId, rating ->
                 viewModel.rateService(serviceId, rating)
+                Notify(message = "¡Gracias por tu calificación!", duration = NotificationDuration.SHORT)
                 selectedService = null
             }
         )

@@ -1,5 +1,7 @@
 package com.baccaro.kmp.presentation.auth
 
+import Notify
+import NotificationDuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -43,8 +45,14 @@ fun LoginScreen(
     if (state.authResponse != null) {
         LaunchedEffect(Unit) {
             when (state.authResponse!!.user.role) {
-                UserRole.WORKER -> onWorkerLoginSuccess()
-                UserRole.CLIENT -> onClientLoginSuccess()
+                UserRole.WORKER -> {
+                    Notify(message = "¡Bienvenido trabajador!", duration = NotificationDuration.SHORT)
+                    onWorkerLoginSuccess()
+                }
+                UserRole.CLIENT -> {
+                    Notify(message = "¡Bienvenido cliente!", duration = NotificationDuration.SHORT)
+                    onClientLoginSuccess()
+                }
             }
         }
     }
@@ -87,7 +95,7 @@ fun LoginScreen(
             Spacer(modifier = Modifier.height(32.dp))
 
             Button(
-                onClick = { 
+                onClick = {
                     viewModel.onLoginClick { role ->
                             when (role) {
                                 UserRole.WORKER -> onWorkerLoginSuccess()
@@ -115,9 +123,12 @@ fun LoginScreen(
             }
 
             state.error?.let { error ->
+                LaunchedEffect(error) {
+                    Notify(message = "Ha ocurrido un error", duration = NotificationDuration.LONG)
+                }
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
-                    text = error,
+                    text = "Ha ocurrido un error",
                     color = MaterialTheme.colorScheme.error
                 )
             }
