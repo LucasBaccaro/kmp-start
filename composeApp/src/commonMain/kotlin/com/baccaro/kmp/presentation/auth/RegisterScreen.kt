@@ -8,11 +8,15 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
@@ -21,6 +25,11 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.baccaro.kmp.domain.model.UserRole
 import com.baccaro.kmp.presentation.RegisterViewModel
+import dev.jordond.compass.geocoder.MobileGeocoder
+import dev.jordond.compass.geocoder.placeOrNull
+import dev.jordond.compass.geolocation.Geolocator
+import dev.jordond.compass.geolocation.GeolocatorResult
+import dev.jordond.compass.geolocation.mobile
 import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -32,6 +41,26 @@ fun RegisterScreen(
     viewModel: RegisterViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    var isLoadingLocation by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        isLoadingLocation = true
+        val geoLocation = Geolocator.mobile()
+        when (val result = geoLocation.current()) {
+            is GeolocatorResult.Success -> {
+                val coordinates = result.data.coordinates
+                // Solo necesitamos llamar a onLocationChanged ya que onCoordinatesChanged espera un string
+                viewModel.onLocationChanged("(${coordinates.latitude}/${coordinates.longitude})")
+            }
+            is GeolocatorResult.Error -> {
+                Notify(
+                    message = "Error al obtener la ubicación: ${result.message}",
+                    duration = NotificationDuration.LONG
+                )
+            }
+        }
+        isLoadingLocation = false
+    }
 
     DisposableEffect(Unit) {
         onDispose {
@@ -92,11 +121,22 @@ fun RegisterScreen(
                 modifier = Modifier.fillMaxWidth()
             )
 
+            // Modificar el campo de ubicación
             OutlinedTextField(
                 value = state.location,
-                onValueChange = viewModel::onLocationChanged,
+                onValueChange = { viewModel.onLocationChanged(it) },
                 label = { Text("Ubicación") },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                enabled = false,
+                leadingIcon = {
+                    if (isLoadingLocation) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(24.dp)
+                        )
+                    } else {
+                        Icon(Icons.Default.LocationOn, contentDescription = "Ubicación")
+                    }
+                }
             )
 
             Button(

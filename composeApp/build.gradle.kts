@@ -85,6 +85,17 @@ kotlin {
             implementation(libs.koin.compose.viewmodel)
             api("io.github.qdsfdhvh:image-loader:1.9.0")
             implementation("io.github.khubaibkhan4:alert-kmp:2.0.0")
+
+            // Location permissions for mobile
+            implementation(libs.compass.permissions.mobile)
+
+            // Geolocation
+            implementation(libs.compass.geolocation)
+            implementation(libs.compass.geolocation.mobile)
+
+            // Geocoding
+            implementation(libs.compass.geocoder)
+            implementation(libs.compass.geocoder.mobile)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)

@@ -23,6 +23,12 @@ class RegisterViewModel(
         _state.value = RegisterState()
     }
 
+    fun onCoordinatesChanged(location: String) {
+        _state.update {
+            it.copy(location = location)
+        }
+    }
+
     fun onEmailChanged(email: String) {
         _state.update { it.copy(email = email) }
     }
